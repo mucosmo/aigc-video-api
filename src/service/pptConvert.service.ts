@@ -28,7 +28,7 @@ export class PptConvertService {
     await this.cpService.create(taskId, { pid, task: 'convert ppt to image with libreoffice and imageMagick', });
 
     let lastOut: string;
-    // const that = this;
+    const that = this;
 
     cp.stdout.on('data', data => {
       console.log('---stdour data:', data)
@@ -40,7 +40,7 @@ export class PptConvertService {
       const errString = err.stack || err.message || err.name;
       console.log('---stderr data:', errString)
       lastOut = errString;
-      this.cpService.close(taskId, { success: false, command, msg: errString, });
+      that.cpService.close(taskId, { success: false, command, msg: errString, });
 
       // that.progress(data, taskId);
     })
@@ -54,8 +54,8 @@ export class PptConvertService {
       const success = data === 0;
       const msg = success ? 'sucess' : lastOut;
       const value = { success, msg, command, };
-      this.cpService.close(taskId, { success, msg, command, });
-      this.closeCallback({ taskId, ...value });
+      that.cpService.close(taskId, { success, msg, command, });
+      that.closeCallback({ taskId, ...value });
 
     });
 
@@ -73,6 +73,7 @@ export class PptConvertService {
   }
 
   async closeCallback(data: any) {
+    console.log('-asd-as=das-d=')
     const url = process.env.PPT_TO_IMAGE_CALLBACK_URL;
     axios.post(url, data).then(res => {
       console.log(res.data)
