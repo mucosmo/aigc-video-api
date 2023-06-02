@@ -8,6 +8,8 @@ import { RedisService } from '@midwayjs/redis';
 import { ChildProcessService } from './process.service';
 import { TaskInfoService } from './taskInfo.service';
 
+import axios from 'axios';
+
 
 @Provide()
 export class PptConvertService {
@@ -34,24 +36,30 @@ export class PptConvertService {
       // that.progress(data, taskId);
     })
 
-    cp.stderr.on('data', data => {
-      console.log('---stderr data:', data)
-      lastOut = data;
+    cp.stderr.on('data', err => {
+      const errString = err.stack || err.message || err.name;
+      console.log('---stderr data:', errString)
+      lastOut = errString;
+      this.cpService.close(taskId, { success: false, command, msg: errString, });
+
       // that.progress(data, taskId);
     })
 
-    cp.on('message', msg=>{
+    cp.on('message', msg => {
       console.log('----message', msg)
     })
-    
+
     cp.once('close', (data) => {
-      console.log('----close:', data)
-      const msg = (data > 0) ? lastOut : 'sucess';
+      console.log('----close:', data);
       const success = data === 0;
+      const msg = success ? 'sucess' : lastOut;
+      const value = { success, msg, command, };
       this.cpService.close(taskId, { success, msg, command, });
+      this.closeCallback({ taskId, ...value });
+
     });
 
-    cp.stderr.on('error', err => {
+    cp.on('error', err => {
       console.error('======err', err)
       this.cpService.close(taskId, { success: false, command, msg: err.stack || err.message || err.name, });
     })
@@ -62,6 +70,15 @@ export class PptConvertService {
     const progress = seconds;
     const value = { progress };
     await this.taskService.update(taskId, value);
+  }
+
+  async closeCallback(data: any) {
+    const url = process.env.PPT_TO_IMAGE_CALLBACK_URL;
+    axios.post(url, data).then(res => {
+      console.log(res.data)
+    }).catch(err => {
+      console.error(err)
+    })
   }
 }
 
