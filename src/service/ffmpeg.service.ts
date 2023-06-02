@@ -22,29 +22,26 @@ export class FfmpegService {
   async execCommand(command: string, taskId: string, taskInfo: object) {
     const cp = exec(command);
     const pid = cp.pid;
-    await this.cpService.create(taskId, { pid, task: 'video composition', ...taskInfo });
-
-    const t1 = new Date().getTime();
+    await this.cpService.create(taskId, { pid, task: 'convert ppt to video with ffpmeg', ...taskInfo });
 
     let lastOut: string;
     const that = this;
     cp.stderr.on('data', data => {
+      console.log('---ffmpeg data:', data)
       lastOut = data;
       that.progress(data, taskId);
     })
 
     cp.once('close', (data) => {
       console.log('----close:', data)
-      const t2 = new Date().getTime();
       const msg = data === 0 ? 'success' : lastOut;
       const success = data === 0;
-      this.cpService.close(taskId, { success, msg, time_ms: t2 - t1, command, });
+      this.cpService.close(taskId, { success, msg, command, });
     });
 
     cp.stderr.on('error', err => {
       console.error('---err', err)
-      const t3 = new Date().getTime();
-      this.cpService.close(taskId, { success: false, command, msg: err.stack || err.message || err.name, time_ms: t3 - t1, });
+      this.cpService.close(taskId, { success: false, command, msg: err.stack || err.message || err.name, });
     })
   }
 
