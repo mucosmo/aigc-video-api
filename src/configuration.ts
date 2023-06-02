@@ -3,13 +3,20 @@ import * as koa from '@midwayjs/koa';
 import * as validate from '@midwayjs/validate';
 import * as info from '@midwayjs/info';
 import { join } from 'path';
+
+import * as redis from '@midwayjs/redis';
+
 // import { DefaultErrorFilter } from './filter/default.filter';
 // import { NotFoundFilter } from './filter/notfound.filter';
 import { ReportMiddleware } from './middleware/report.middleware';
 
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 @Configuration({
   imports: [
     koa,
+    redis,
     validate,
     {
       component: info,

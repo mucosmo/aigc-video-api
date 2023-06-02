@@ -2,8 +2,16 @@ import { MidwayConfig } from '@midwayjs/core';
 
 export default {
   // use for cookie sign key, should change to your own and keep security
-  keys: '1685605603807_6903',
+  keys: process.env.COOKIE_KEYS,
   koa: {
-    port: 7001,
+    port: process.env.SERVER_PORT || 60150,
   },
+  redis: {
+    client: {
+      port: process.env.REDIS_PORT,
+      host: process.env.REDIS_HOST,
+      password: process.env.REDIS_PASSWORD,
+      db: process.env.REDIS_DB || 0
+    },
+  }
 } as MidwayConfig;
