@@ -31,8 +31,9 @@
     "node": ">=12.0.0"
   },
   "scripts": {
-    "start": "NODE_ENV=production node ./bootstrap.js",
+    "start": "npm run build && NODE_ENV=production pm2 start ./bootstrap.js --name ppt-2-video",
     "dev": "cross-env NODE_ENV=local midway-bin dev --ts",
+    "stop":"pm2 stop ppt-2-video",
     "test": "midway-bin test --ts",
     "cov": "midway-bin cov --ts",
     "lint": "mwts check",
