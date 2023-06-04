@@ -33,7 +33,7 @@
     "node": ">=12.0.0"
   },
   "scripts": {
-    "start": "npm run build && NODE_ENV=production pm2 start ./bootstrap.js --name aigc-ppt-to-video",
+    "start": "npm run stop & npm run build && NODE_ENV=production pm2 start ./bootstrap.js --name aigc-ppt-to-video",
     "dev": "cross-env NODE_ENV=local midway-bin dev --ts",
     "stop": "pm2 stop ppt-2-video",
     "test": "midway-bin test --ts",
