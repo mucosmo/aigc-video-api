@@ -12,8 +12,8 @@ export class APIController {
 
   @Post('/video/composite')
   async videoComposite(@Body(ALL) params: any) {
-    const { command, taskId } = params;
-    const ret = await this.ffmpegService.execCommand(command, taskId, { duration: 10 });
+    const { command, taskId, duration } = params;
+    const ret = await this.ffmpegService.execCommand(command, taskId, duration);
     this.ctx.body = ret;
   }
 }
