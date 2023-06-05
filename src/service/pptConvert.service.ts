@@ -1,4 +1,4 @@
-import { Provide, Inject } from '@midwayjs/core';
+import { Provide, Inject, Context } from '@midwayjs/core';
 // import { IUserOptions } from '../interface';
 
 import { exec } from 'child_process';
@@ -13,6 +13,9 @@ import axios from 'axios';
 
 @Provide()
 export class PptConvertService {
+  @Inject()
+  ctx: Context;
+
   @Inject()
   redisService: RedisService;
 
@@ -57,7 +60,9 @@ export class PptConvertService {
       const value = { success, msg, command, };
       that.cpService.close(taskId, { success, msg, command, });
       that.closeCallback({ taskId, output, callback, ...value });
-
+      if (!success) {
+        that.ctx.logger.error(new Error(JSON.stringify({ taskId, output, callback, ...value })))
+      }
     });
 
     cp.on('error', err => {
@@ -74,12 +79,12 @@ export class PptConvertService {
   }
 
   async closeCallback(data: any) {
-    console.log('-asd-as=das-d=')
     const url = process.env.PPT_TO_IMAGE_CALLBACK_URL;
+    const that = this;
     axios.post(url, data).then(res => {
       console.log(res.data)
     }).catch(err => {
-      console.error(err)
+      that.ctx.logger.error(new Error(err))
     })
   }
 }

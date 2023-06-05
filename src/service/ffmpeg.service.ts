@@ -1,4 +1,4 @@
-import { Provide, Inject } from '@midwayjs/core';
+import { Provide, Inject, Context } from '@midwayjs/core';
 // import { IUserOptions } from '../interface';
 
 import { exec } from 'child_process';
@@ -10,6 +10,9 @@ import { TaskInfoService } from './taskInfo.service'
 
 @Provide()
 export class FfmpegService {
+  @Inject()
+  ctx: Context;
+
   @Inject()
   redisService: RedisService;
 
@@ -36,7 +39,10 @@ export class FfmpegService {
       console.log('----close:', data)
       const msg = data === 0 ? 'success' : lastOut;
       const success = data === 0;
-      this.cpService.close(taskId, { success, msg, command, });
+      that.cpService.close(taskId, { success, msg, command, });
+      if (!success) {
+        that.ctx.logger.error(new Error(JSON.stringify({ taskId, success, msg, command, })))
+      }
     });
 
     cp.stderr.on('error', err => {
@@ -53,9 +59,7 @@ export class FfmpegService {
   }
 
   async checkProgress(taskId: string) {
-    const ret = await this.taskService.getInfo(taskId);
-    const { statusCode, success, progress, duration } = ret;
-    console.log(statusCode, progress, duration);
+    const { statusCode, success, progress, duration } = await this.taskService.getInfo(taskId);
     // progree occupied
     if (statusCode == 1) { // running
       return {

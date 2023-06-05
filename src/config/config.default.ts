@@ -13,5 +13,10 @@ export default {
       password: process.env.REDIS_PASSWORD,
       db: process.env.REDIS_DB || 0
     },
+  },
+  midwayLogger: {
+    default: {
+      maxFiles: '7d',
+    }
   }
 } as MidwayConfig;
