@@ -23,10 +23,10 @@ export class PptConvertService {
   taskService: TaskInfoService;
 
   async execCommand(params: any) {
-    const { command, taskId, output } = params;
+    const { command, taskId, output, callback } = params;
     const cp = exec(command);
     const pid = cp.pid;
-    await this.cpService.create(taskId, { pid, task: 'convert ppt to image with libreoffice and imageMagick', });
+    await this.cpService.create(taskId, { pid, callback, task: 'convert ppt to image with libreoffice and imageMagick', });
 
     let lastOut: string;
     const that = this;
@@ -56,7 +56,7 @@ export class PptConvertService {
       const msg = success ? 'sucess' : lastOut;
       const value = { success, msg, command, };
       that.cpService.close(taskId, { success, msg, command, });
-      that.closeCallback({ taskId, output, ...value });
+      that.closeCallback({ taskId, output, callback, ...value });
 
     });
 
