@@ -15,8 +15,7 @@ export class PptConvertController {
 
   @Post('/ppt/image') 
   async ppt2Image(@Body(ALL) params: any) {
-    const { command, taskId } = params;
-    const ret = await this.convertService.execCommand(command, taskId);
+    const ret = await this.convertService.execCommand(params);
     this.ctx.body = ret;
   }
 }
