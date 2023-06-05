@@ -51,6 +51,34 @@ export class FfmpegService {
     const value = { progress };
     await this.taskService.update(taskId, value);
   }
+
+  async checkProgress(taskId: string) {
+    const ret = await this.taskService.getInfo(taskId);
+    const { statusCode, success, progress, duration } = ret;
+    console.log(statusCode, progress, duration);
+    // progree occupied
+    if (statusCode == 1) { // running
+      return {
+        progress: progress / duration,
+        occupied: true,
+      }
+    }
+    if (statusCode == 0 && success) {
+      return {
+        occupied: false,
+        progress: 1,
+        success: true
+      }
+    }
+
+    if (statusCode == 0 && !success) {
+      return {
+        occupied: false,
+        progress: 0,
+        success: false
+      }
+    }
+  }
 }
 
 function parseTime(data) {
