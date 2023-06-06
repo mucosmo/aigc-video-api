@@ -1,29 +1,33 @@
-# my_midway_project
+# aigc-video-api
 
-## QuickStart
+## linux 软件需求
 
-<!-- add docs here for user -->
+1. redis 5.0+ (redis-cli -v)
 
-see [midway docs][midway] for more detail.
-
-### Development
+## 更新后重启
 
 ```bash
-$ npm i
-$ npm run dev
-$ open http://localhost:7001/
+# 如有必要，更新服务参数
+vi .env
+# 运行
+./run.sh
+# 用 pm2 可以看到 aigc-video-api 在运行
+pm2 list
 ```
 
-### Deploy
+## 初次运行
 
 ```bash
-$ npm start
+# 拉取代码安装依赖
+git pull
+cnpm install
+
+# 生成 env 文件，然后配置参数
+mv .env.example .env
+
+# 运行
+npm start
+
+# 用 pm2 可以看到 aigc-video-api 在运行
+pm2 list
 ```
-
-### npm scripts
-
-- Use `npm run lint` to check code style.
-- Use `npm test` to run unit test.
-
-
-[midway]: https://midwayjs.org
