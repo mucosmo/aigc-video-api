@@ -54,7 +54,6 @@ export class PptConvertService {
     })
 
     cp.once('close', (data) => {
-      console.log('----close:', data);
       const success = data === 0;
       const msg = success ? 'sucess' : lastOut;
       const value = { success, msg, command, };

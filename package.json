@@ -1,7 +1,7 @@
 {
-  "name": "my-midway-project",
+  "name": "aigc-video-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "aigc后端服务",
   "private": true,
   "dependencies": {
     "@midwayjs/bootstrap": "^3.0.0",
@@ -33,9 +33,9 @@
     "node": ">=12.0.0"
   },
   "scripts": {
-    "start": "npm run stop & npm run build && NODE_ENV=production pm2 start ./bootstrap.js --name aigc-ppt-to-video",
+    "start": "NODE_ENV=production pm2 start ./bootstrap.js --name dev-aigc-video-api",
     "dev": "cross-env NODE_ENV=local midway-bin dev --ts",
-    "stop": "pm2 stop ppt-2-video",
+    "stop": "pm2 stop dev-aigc-video-api",
     "test": "midway-bin test --ts",
     "cov": "midway-bin cov --ts",
     "lint": "mwts check",
