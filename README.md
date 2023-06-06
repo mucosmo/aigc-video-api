@@ -3,6 +3,9 @@
 ## linux 软件需求
 
 1. redis 5.0+ (redis-cli -v)
+2. ffmpeg 5.0+
+3. libreoffice
+4. imagemagick
 
 ## 更新后重启
 
