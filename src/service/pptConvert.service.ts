@@ -41,8 +41,7 @@ export class PptConvertService {
     })
 
     cp.stderr.on('data', err => {
-      const errString = err.stack || err.message || err.name;
-      console.log('---stderr data:', errString)
+      const errString = err.stack || err.message || err.name || err;
       lastOut = errString;
       that.cpService.close(taskId, { success: false, command, msg: errString, });
 
@@ -56,6 +55,7 @@ export class PptConvertService {
     cp.once('close', (data) => {
       const success = data === 0;
       const msg = success ? 'sucess' : lastOut;
+      console.log('---msg', msg)
       const value = { success, msg, command, };
       that.cpService.close(taskId, { success, msg, command, });
       that.closeCallback({ taskId, output, callback, ...value });
