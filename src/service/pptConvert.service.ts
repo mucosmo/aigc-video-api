@@ -80,9 +80,7 @@ export class PptConvertService {
   async closeCallback(data: any) {
     const url = process.env.PPT_TO_IMAGE_CALLBACK_URL;
     const that = this;
-    axios.post(url, data).then(res => {
-      console.log(res.data)
-    }).catch(err => {
+    axios.post(url, data).then(res => { }).catch(err => {
       that.ctx.logger.error(new Error(err))
     })
   }
